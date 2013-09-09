@@ -243,9 +243,12 @@ PHP_METHOD(tch, get) {
     php_tchdb* hdb;
     ZEND_FETCH_RESOURCE(hdb, php_tchdb*, &_hdb, -1, "tchdb", le_tch);
     char* vstr = tchdbget2(hdb->hdb, kstr);
+    if (vstr == NULL) {
+        RETURN_FALSE;
+    }
     char* evstr = estrdup(vstr);
     free(vstr);
-    RETURN_STRING(evstr, 1);
+    RETURN_STRING(evstr, 0);
 }
 
 PHP_METHOD(tch, put) {
@@ -305,9 +308,12 @@ PHP_METHOD(tch, iternext) {
     php_tchdb* hdb;
     ZEND_FETCH_RESOURCE(hdb, php_tchdb*, &_hdb, -1, "tchdb", le_tch);
     char* kstr = tchdbiternext2(hdb->hdb);
+    if (kstr == NULL) {
+        RETURN_FALSE;
+    }
     char* ekstr = estrdup(kstr);
     free(kstr);
-    RETURN_STRING(ekstr, 1);
+    RETURN_STRING(ekstr, 0);
 }
 
 PHP_METHOD(tch, vsiz) {
